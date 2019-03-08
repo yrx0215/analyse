@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jnshu.miku.mapper.StudentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jnshu.miku.pojo.Student">
+        <id column="id" property="id" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="name" property="name" />
+        <result column="qq" property="qq" />
+        <result column="type" property="type" />
+        <result column="school" property="school" />
+        <result column="online" property="online" />
+        <result column="from_know" property="fromKnow" />
+        <result column="create_at" property="createAt" />
+        <result column="wish" property="wish" />
+        <result column="glory_brother" property="gloryBrother" />
+        <result column="img" property="img" />
+        <collection property="rule" ofType="com.jnshu.miku.pojo.Rule">
+            <id column="rule_id" property="ruleId" jdbcType="BIGINT"/>
+            <result column="role" property="role" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="student_rule" >
+        student.id,student.account,student.password,student.name,student.qq,student.type,student.school,
+        student.online,student.from_know,student.create_at,student.wish,student.glory_brother,student.img,
+        rule.rule_id,rule.role
+    </sql>
+
+    <select id="findRule" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="student_rule"/>
+        FROM student
+        LEFT JOIN user_rule ON student.id=user_rule.user_id
+        LEFT JOIN rule ON user_rule.rule_id=rule.rule_id
+        WHERE student.account=#{account}
+    </select>
+
+</mapper>
